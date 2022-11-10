@@ -1,62 +1,101 @@
+import { useState } from 'react'
+import { Card } from './Card'
+import './index.css'
+
 // Aqui você irá escrever as suas funções de Validação, para verificar se o Formulário foi preenchido corretamente
-/*eslint-disable */
-import { useState } from "react"
-import { Card } from "./Card";
+function validationNameColor(nomeCor) {
+  return nomeCor.trim().length > 3
+}
+
+function validationColorHex(corHexa) {
+  const padrao = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+  let erro = false
+  let haveNumber = false
+
+  if (corHexa.trim().length < 6) {
+    return false
+  }
+
+  corHexa.toUpperCase().split('').map(char => {
+    if (!padrao.includes(char)) {
+      erro = true
+    }
+    haveNumber = haveNumber ? true : !isNaN(Number(char))
+  })
+
+  if (!haveNumber) {
+    erro = true
+  }
+
+  return !erro
+}
 
 function App() {
-  const [nomeCor, setNomeCor] = useState();
-  const [corHexadecimal, setCorHexadecimal] = useState();
-  const [allCores, setAllCores] = useState([]);
+  // Aqui você irá criar os Estados para manipular os Inputs
+  const [nameColor, setNameColor] = useState('')
+  const [codeColor, setCodeColor] = useState('')
+  const [allColors, setAllColors] = useState([])
+  const [formularioErro, setFormularioErro] = useState(false)
 
-  function adicionarCor(event) {
+  function addColor(event) {
     event.preventDefault()
+    let error = false
 
-    const coloracao = {
-      nomeCor: nomeCor,
-      corHexadecimal: corHexadecimal
+    const newColor = {
+      nomeCor: nameColor,
+      corHexadecimal: codeColor
     }
 
-    if (corHexadecimal.length != 7 || corHexadecimal[0] != '#') {
-      alert('Cor inválida');
-    } else {
-      setAllCores([...allCores, coloracao])
+    error = !validationNameColor(nameColor) || !validationColorHex(codeColor)
+
+    setFormularioErro(error)
+    if (!error) {
+      setAllColors([...allColors, newColor])
+      setNameColor('')
+      setCodeColor('')
     }
   }
 
   return (
     <div className="App">
-      <h1 >Adicionar nova cor</h1>
-      <form className="input">
-        <div className='input'>
-          <label htmlFor="nome-cor">Nome</label>
-          <input type="text"
-            className="nome-cor"
-            value={nomeCor}
-            onChange={event => setNomeCor(event.target.value)}
-            placeholder="Entre com o nome da Cor" />
+      <form className="form-cadastro"
+        onSubmit={event => addColor(event)}>
+        <h1>Adicionar Nova Cor</h1>
+        <div className='comp-container'>
+          <div className="comp-input">
+            <label htmlFor="nameColor">Nome</label>
+            <input type="text"
+              className="form-control"
+              value={nameColor}
+              onChange={event => setNameColor(event.target.value)}
+              placeholder="Insira o nome da cor" />
+          </div>
+          <div className='comp-input'>
+            <label htmlFor="codeColor">Cor</label>
+            <input type="text"
+              className="form-control"
+              maxLength="6"
+              value={codeColor}
+              onChange={event => setCodeColor(event.target.value)}
+              placeholder="Insira a sua cor no formato hexadecimal sem #" />
+          </div>
         </div>
-        <div>
-          <label htmlFor="cor-hexadecimal">Cor</label>
-          <input type="text"
-            className="cor-hexadecimal"
-            value={corHexadecimal}
-            onChange={event => setCorHexadecimal(event.target.value)}
-            placeholder="Digite uma cor Hexadecimal" />
+        <div className='comp-btn'>
+          <button type="submit">ADICIONAR</button>
         </div>
-        <button
-          type="submit"
-          onClick={event => adicionarCor(event)}
-          className="btn btn-primary"
-        >Adicionar</button>
       </form>
+      <span>{formularioErro ? 'Por favor, verifique os dados inseridos no formulário' : ''}</span>
       <section>
-        {
-          allCores.map((cor, i) => {
-            return (
-              <Card key={i} corData={cor} />
-            )
-          })
-        }
+        <h2>Cores Favoritas</h2>
+        <div className='all-cards'>
+          {
+            allColors.map((cor, i) => {
+              return (
+                <Card key={i} corData={cor} />
+              )
+            })
+          }
+        </div>
       </section>
     </div>
   )
