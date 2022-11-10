@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Card } from './Card'
 // Aqui você irá escrever as suas funções de Validação, para verificar se o Formulário foi preenchido corretamente
+/*eslint-disable */
+import { useState } from "react"
+import { Card } from "./Card";
 
 function App() {
-  // Aqui você irá criar os Estados para manipular os Inputs
   const [nomeCor, setNomeCor] = useState();
   const [corHexadecimal, setCorHexadecimal] = useState();
   const [allCores, setAllCores] = useState([]);
@@ -16,24 +16,28 @@ function App() {
       corHexadecimal: corHexadecimal
     }
 
-    setAllCores([...allCores, coloracao])
+    if (corHexadecimal.length != 7 || corHexadecimal[0] != '#') {
+      alert('Cor inválida');
+    } else {
+      setAllCores([...allCores, coloracao])
+    }
   }
 
   return (
     <div className="App">
       <h1>Carga de estudiantes</h1>
-      <form className="formCadastro" onSubmit={event => adicionarCor(event)}>
+      <form className="formCadastro">
         <input type="text"
           className="form-control"
           value={nomeCor}
           onChange={event => setNomeCor(event.target.value)}
           placeholder="Entre com o nome da Cor" />
-        <input type="color"
+        <input type="text"
           className="form-control"
           value={corHexadecimal}
           onChange={event => setCorHexadecimal(event.target.value)}
-          placeholder="Escolha a cor" />
-        <button type="submit" className="btn btn-primary">Adicionar</button>
+          placeholder="Digite uma cor Hexadecimal" />
+        <button type="submit" onClick={event => adicionarCor(event)} className="btn btn-primary">Adicionar</button>
       </form>
       <section>
         {
@@ -47,6 +51,5 @@ function App() {
     </div>
   )
 }
-
 
 export default App
