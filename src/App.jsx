@@ -25,19 +25,29 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Carga de estudiantes</h1>
-      <form className="formCadastro">
-        <input type="text"
-          className="form-control"
-          value={nomeCor}
-          onChange={event => setNomeCor(event.target.value)}
-          placeholder="Entre com o nome da Cor" />
-        <input type="text"
-          className="form-control"
-          value={corHexadecimal}
-          onChange={event => setCorHexadecimal(event.target.value)}
-          placeholder="Digite uma cor Hexadecimal" />
-        <button type="submit" onClick={event => adicionarCor(event)} className="btn btn-primary">Adicionar</button>
+      <h1 >Adicionar nova cor</h1>
+      <form className="input">
+        <div className='input'>
+          <label htmlFor="nome-cor">Nome</label>
+          <input type="text"
+            className="nome-cor"
+            value={nomeCor}
+            onChange={event => setNomeCor(event.target.value)}
+            placeholder="Entre com o nome da Cor" />
+        </div>
+        <div>
+          <label htmlFor="cor-hexadecimal">Cor</label>
+          <input type="text"
+            className="cor-hexadecimal"
+            value={corHexadecimal}
+            onChange={event => setCorHexadecimal(event.target.value)}
+            placeholder="Digite uma cor Hexadecimal" />
+        </div>
+        <button
+          type="submit"
+          onClick={event => adicionarCor(event)}
+          className="btn btn-primary"
+        >Adicionar</button>
       </form>
       <section>
         {
